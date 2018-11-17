@@ -1,8 +1,24 @@
-const express = require('express')
-const app = express()
+var http = require('http');
+var fs = require('fs');
 
-app.use('/static', express.static('public'));
 
-app.get('/', (req, res) => res.send('Hello World'))
 
-app.listen(3000, () => console.log('Hello world on port 3000!'))
+function onRequest(request, response)
+{
+
+    response.writeHead(200, {'Context-Type': 'text/html'});
+    fs.readFile('./results/index.html', null, function(error, data){
+      if(error)
+      {
+          response.writeHead(404);
+          response.write('File not found!');
+      }
+      else {
+        response.write(data);
+      }
+      response.end();
+    });
+
+}
+
+http.createServer(onRequest).listen(8000);
